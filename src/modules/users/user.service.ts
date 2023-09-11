@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, Inject, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/user-create.dto";
 import { UpdateUserDto } from "./dto/user-update.dto";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
@@ -6,13 +6,22 @@ import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { UserLoginDto } from "./dto/user-login.dto";
 import { createChain } from "src/common/functions";
 import { InsertUserHandler } from "./handlers/insert-user.handler";
+import { Repository } from "typeorm";
+import { User } from "./user.entity";
+import { DatabaseHandler } from "src/common/database/database.handler";
 
 
 @Injectable()
 export class UserService {
 
+    constructor(
+        @Inject('USER_REPOSITORY')
+        private userRepository: Repository<User>,
+    ){}
+
     async userCreate(params: CreateUserDto) {
         return await createChain([
+            new DatabaseHandler(this.userRepository),
             new InsertUserHandler()
         ]).handle(params)
     }

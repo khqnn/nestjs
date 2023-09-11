@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "./dto/user-create.dto";
 import { UpdateUserDto } from "./dto/user-update.dto";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
@@ -9,6 +9,9 @@ import { InsertUserHandler } from "./handlers/insert-user.handler";
 import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { DatabaseHandler } from "src/common/database/database.handler";
+import { UserSecreteHandler } from "./handlers/user-secrete.handler";
+import { PrepareInsertUserHandler } from "./handlers/prepare-insert-user.handler";
+import { ParseSafeUser } from "./handlers/parse-safe-user.handler";
 
 
 @Injectable()
@@ -19,11 +22,14 @@ export class UserService {
         private userRepository: Repository<User>,
     ){}
 
-    async userCreate(params: CreateUserDto) {
+    async userCreate(createUser: CreateUserDto) {
         return await createChain([
             new DatabaseHandler(this.userRepository),
-            new InsertUserHandler()
-        ]).handle(params)
+            new UserSecreteHandler(),
+            new PrepareInsertUserHandler(),
+            new InsertUserHandler(),
+            new ParseSafeUser(),
+        ]).handle({createUser})
     }
 
     userVerify(id: number) {

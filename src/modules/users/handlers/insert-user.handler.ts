@@ -22,6 +22,7 @@ export class InsertUserHandler extends BaseHandler {
     }
 
     const nextHandlerResponse = await this.callNextHandler(payload);
+    nextHandlerResponse.statusCode = 201
     return nextHandlerResponse;
   }
 }

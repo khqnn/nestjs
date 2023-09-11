@@ -4,7 +4,7 @@ import { UpdateUserDto } from "./dto/user-update.dto";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { UpdatePasswordDto } from "./dto/update-password.dto";
 import { UserLoginDto } from "./dto/user-login.dto";
-import { createChain } from "src/utils/functions";
+import { createChain } from "src/common/functions";
 import { InsertUserHandler } from "./handlers/insert-user.handler";
 
 

@@ -1,4 +1,4 @@
-import { BaseHandler } from "src/utils/abstracts/BaseHandler";
+import { BaseHandler } from "src/common/abstracts/BaseHandler";
 
 
 export class InsertUserHandler extends BaseHandler{

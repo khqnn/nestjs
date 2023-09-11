@@ -3,8 +3,8 @@ import { TenantService } from "./tenants.service";
 import { UpdateTenantDto, updateTenantSchema } from "./dto/tenant-update.dto";
 import { CreateTenantUserDto, createTenantUserSchema } from "./dto/tenant-user-create.dto";
 import { UpdateTenantUserDto, updateTenantUserSchema } from "./dto/tenant-user-update.dto";
-import { CustomValidationPipe } from "src/utils/pipes/validation.pipe";
-import { PermissionsGuard } from "src/utils/guards/permissions.guard";
+import { CustomValidationPipe } from "src/common/pipes/validation.pipe";
+import { PermissionsGuard } from "src/common/guards/permissions.guard";
 
 
 @Controller('tenants')

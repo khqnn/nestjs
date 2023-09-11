@@ -33,8 +33,6 @@ import { TenantService } from 'src/modules/tenants/tenants.service';
 import { CustomValidationPipe } from 'src/common/pipes/validation.pipe';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { ApiKeyGuard } from 'src/common/guards/apikey.guard';
-import { createChain } from 'src/common/functions';
-import { InsertUserHandler } from './handlers/insert-user.handler';
 
 @Controller('users')
 export class UserController {

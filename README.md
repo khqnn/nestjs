@@ -1,1 +1,3 @@
 # nestjs
+
+`npm install`

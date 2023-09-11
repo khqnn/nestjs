@@ -1,9 +1,8 @@
-
-import {z} from 'zod';
+import { z } from 'zod';
 
 export const createTenantUserSchema = z.object({
-    role: z.string(),
-    privileges: z.array(z.string()),
-})
+  role: z.string(),
+  privileges: z.array(z.string()),
+});
 
-export type CreateTenantUserDto = z.infer<typeof createTenantUserSchema>
+export type CreateTenantUserDto = z.infer<typeof createTenantUserSchema>;

@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 export const resetPasswordSchema = z
@@ -9,4 +8,3 @@ export const resetPasswordSchema = z
   .required();
 
 export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;
-

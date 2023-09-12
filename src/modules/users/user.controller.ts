@@ -73,6 +73,7 @@ export class UserController {
    * - send 200 with data
    */
   @Post('/:id/verify')
+  @UseGuards(new PermissionsGuard(null, {path: 'id', sub: 'sub'}))
   verify(@Param('id', ParseIntPipe) id: number) {
     return this.userService.userVerify(id);
   }

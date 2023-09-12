@@ -106,21 +106,6 @@ export class UserController {
   }
 
   /**
-   * POST     /users/set-password
-   * [userSetPassword]
-   * - get user by id
-   * - send 404 if not found
-   * - set user password from temp password
-   * - update user resource
-   * - send 400 if faild
-   * - send 200 with data
-   */
-  @Post('/:id/set-password')
-  setPassword(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.userSetPassword(id);
-  }
-
-  /**
    * PUT     /users/:id/password
    * user-password-change & sub=:id
    * [userUpdatePassword]

@@ -17,6 +17,7 @@ import { SetUserVerifyHandler } from './handlers/set-user-verified.handler';
 import { UpdateUserHandler } from './handlers/update-user.handler';
 import { GetUserByEmailHandler } from './handlers/get-user-by-email.handler';
 import { SetTemporaryPasswordHandler } from './handlers/set-temp-pass.handler';
+import { GenerateVerificationTokenHandler } from './handlers/generate-verification-token.handler';
 
 @Injectable()
 export class UserService {
@@ -32,6 +33,7 @@ export class UserService {
       new PrepareInsertUserHandler(),
       new InsertUserHandler(),
       new ParseSafeUser(),
+      new GenerateVerificationTokenHandler(),
     ]).handle({ createUser });
   }
 
@@ -52,12 +54,8 @@ export class UserService {
       new SetTemporaryPasswordHandler(),
       new UpdateUserHandler(),
       new ParseSafeUser(),
-
+      new GenerateVerificationTokenHandler(),
     ]).handle({ resetPassword, user_email: resetPassword.email });
-  }
-
-  userSetPassword(id: number) {
-    return `This method will set password active after forgot password...`;
   }
 
   userUpdatePassword(id: number, params: UpdatePasswordDto) {

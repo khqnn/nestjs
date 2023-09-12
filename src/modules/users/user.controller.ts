@@ -50,7 +50,6 @@ export class UserController {
    */
 
   @Post()
-  @HttpCode(201)
   @UseGuards(ApiKeyGuard)
   @UsePipes(new CustomValidationPipe(createUserSchema))
   async create(@Body() params: CreateUserDto) {
@@ -73,6 +72,7 @@ export class UserController {
    * - send 200 with data
    */
   @Post('/:id/verify')
+  @HttpCode(200)
   @UseGuards(new PermissionsGuard(null, { path: 'id', sub: 'sub' }))
   async verify(@Param('id', ParseIntPipe) id: number) {
     const results = await this.userService.userVerify(id);
@@ -94,9 +94,15 @@ export class UserController {
    * - send 200
    */
   @Post('/reset-password')
+  @HttpCode(200)
   @UsePipes(new CustomValidationPipe(resetPasswordSchema))
-  resetPassword(@Body() params: ResetPasswordDto) {
-    return this.userService.userResetPassword(params);
+  async resetPassword(@Body() params: ResetPasswordDto) {
+    const results = await this.userService.userResetPassword(params);
+    if (!results.success) {
+      throw new HttpException(results, results.statusCode);
+    }
+
+    return results;
   }
 
   /**

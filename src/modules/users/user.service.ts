@@ -15,6 +15,8 @@ import { ParseSafeUser } from './handlers/parse-safe-user.handler';
 import { GetUserByIdHandler } from './handlers/get-user-by-id.handler';
 import { SetUserVerifyHandler } from './handlers/set-user-verified.handler';
 import { UpdateUserHandler } from './handlers/update-user.handler';
+import { GetUserByEmailHandler } from './handlers/get-user-by-email.handler';
+import { SetTemporaryPasswordHandler } from './handlers/set-temp-pass.handler';
 
 @Injectable()
 export class UserService {
@@ -43,8 +45,15 @@ export class UserService {
     ]).handle({ user_id });
   }
 
-  userResetPassword(params: ResetPasswordDto) {
-    return `This method will reset if user forgot password...`;
+  async userResetPassword(resetPassword: ResetPasswordDto) {
+    return await createChain([
+      new DatabaseHandler(this.userRepository),
+      new GetUserByEmailHandler(),
+      new SetTemporaryPasswordHandler(),
+      new UpdateUserHandler(),
+      new ParseSafeUser(),
+
+    ]).handle({ resetPassword, user_email: resetPassword.email });
   }
 
   userSetPassword(id: number) {

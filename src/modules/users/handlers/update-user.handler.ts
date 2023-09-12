@@ -8,7 +8,7 @@ export class UpdateUserHandler extends BaseHandler {
 
         const user_id = payload.user_id
         const user: User = payload.user
-        const userRepository: Repository<User> = payload.repository
+        const userRepository: Repository<User> = payload.userRepository
 
         try {
             await userRepository.update({id: user_id}, user)

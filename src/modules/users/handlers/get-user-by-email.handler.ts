@@ -7,7 +7,7 @@ export class GetUserByEmailHandler extends BaseHandler {
     async handle(payload: any): Promise<{ success: boolean; statusCode: number; data: object; message: string; error?: any; }> {
 
         const user_email = payload.user_email
-        const userRepository: Repository<User> = payload.repository
+        const userRepository: Repository<User> = payload.userRepository
 
         let user = undefined
         try {

@@ -7,7 +7,7 @@ export class GetUserByIdHandler extends BaseHandler {
     async handle(payload: any): Promise<{ success: boolean; statusCode: number; data: object; message: string; error?: any; }> {
 
         const user_id = payload.user_id
-        const userRepository: Repository<User> = payload.repository
+        const userRepository: Repository<User> = payload.userRepository
 
         let user = undefined
         try {

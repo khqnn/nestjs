@@ -7,7 +7,7 @@ export class InsertUserHandler extends BaseHandler {
     console.log('insert user handler...');
 
     const createUser: User = payload.createUser;
-    const userRepository: Repository<User> = payload.repository;
+    const userRepository: Repository<User> = payload.userRepository;
 
     try {
       await userRepository.insert(createUser);

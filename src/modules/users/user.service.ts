@@ -8,7 +8,6 @@ import { createChain } from 'src/common/functions';
 import { InsertUserHandler } from './handlers/insert-user.handler';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { DatabaseHandler } from 'src/common/database/database.handler';
 import { UserSecreteHandler } from './handlers/user-secrete.handler';
 import { PrepareInsertUserHandler } from './handlers/prepare-insert-user.handler';
 import { ParseSafeUser } from './handlers/parse-safe-user.handler';
@@ -18,6 +17,7 @@ import { UpdateUserHandler } from './handlers/update-user.handler';
 import { GetUserByEmailHandler } from './handlers/get-user-by-email.handler';
 import { SetTemporaryPasswordHandler } from './handlers/set-temp-pass.handler';
 import { GenerateVerificationTokenHandler } from './handlers/generate-verification-token.handler';
+import { InjectUserRepositoryHandler } from './handlers/inject-user-repository.handler';
 
 @Injectable()
 export class UserService {
@@ -28,7 +28,7 @@ export class UserService {
 
   async userCreate(createUser: CreateUserDto) {
     return await createChain([
-      new DatabaseHandler(this.userRepository),
+      new InjectUserRepositoryHandler(this.userRepository),
       new UserSecreteHandler(),
       new PrepareInsertUserHandler(),
       new InsertUserHandler(),
@@ -39,7 +39,7 @@ export class UserService {
 
   async userVerify(user_id: number) {
     return await createChain([
-      new DatabaseHandler(this.userRepository),
+      new InjectUserRepositoryHandler(this.userRepository),
       new GetUserByIdHandler(),
       new SetUserVerifyHandler(),
       new UpdateUserHandler(),
@@ -49,7 +49,7 @@ export class UserService {
 
   async userResetPassword(resetPassword: ResetPasswordDto) {
     return await createChain([
-      new DatabaseHandler(this.userRepository),
+      new InjectUserRepositoryHandler(this.userRepository),
       new GetUserByEmailHandler(),
       new SetTemporaryPasswordHandler(),
       new UpdateUserHandler(),

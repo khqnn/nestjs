@@ -39,7 +39,7 @@ export class UserController {
   constructor(
     private userService: UserService,
     private tenantService: TenantService,
-  ) {}
+  ) { }
 
   /**
    * POST     /users/create
@@ -73,9 +73,14 @@ export class UserController {
    * - send 200 with data
    */
   @Post('/:id/verify')
-  @UseGuards(new PermissionsGuard(null, {path: 'id', sub: 'sub'}))
-  verify(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.userVerify(id);
+  @UseGuards(new PermissionsGuard(null, { path: 'id', sub: 'sub' }))
+  async verify(@Param('id', ParseIntPipe) id: number) {
+    const results = await this.userService.userVerify(id);
+    if (!results.success) {
+      throw new HttpException(results, results.statusCode);
+    }
+
+    return results;
   }
 
   /**

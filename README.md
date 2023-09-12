@@ -1,4 +1,6 @@
 # nestjs
 
-`npm install`
-`npm run start`
+- validation pipes
+- permission guards
+- chain of responsibility
+- Postgres with typeorm

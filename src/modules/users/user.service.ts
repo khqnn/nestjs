@@ -12,7 +12,9 @@ import { DatabaseHandler } from 'src/common/database/database.handler';
 import { UserSecreteHandler } from './handlers/user-secrete.handler';
 import { PrepareInsertUserHandler } from './handlers/prepare-insert-user.handler';
 import { ParseSafeUser } from './handlers/parse-safe-user.handler';
-import { GetUserById } from './handlers/get-user-by-id.handler';
+import { GetUserByIdHandler } from './handlers/get-user-by-id.handler';
+import { SetUserVerifyHandler } from './handlers/set-user-verified.handler';
+import { UpdateUserHandler } from './handlers/update-user.handler';
 
 @Injectable()
 export class UserService {
@@ -34,7 +36,10 @@ export class UserService {
   async userVerify(user_id: number) {
     return await createChain([
       new DatabaseHandler(this.userRepository),
-      new GetUserById(),
+      new GetUserByIdHandler(),
+      new SetUserVerifyHandler(),
+      new UpdateUserHandler(),
+      new ParseSafeUser(),
     ]).handle({ user_id });
   }
 

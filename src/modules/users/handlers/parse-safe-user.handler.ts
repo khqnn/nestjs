@@ -8,14 +8,14 @@ export class ParseSafeUser extends BaseHandler {
     message: string;
     error?: any;
   }> {
-    const createUser = payload.createUser;
+    const user = payload.user;
 
-    delete createUser.password_temp;
-    delete createUser.password_hash;
-    delete createUser.secrete;
+    delete user.password_temp;
+    delete user.password_hash;
+    delete user.secrete;
 
     const nextHandlerResponse = await this.callNextHandler(payload);
-    nextHandlerResponse.data['user'] = createUser;
+    nextHandlerResponse.data['user'] = user;
     return nextHandlerResponse;
   }
 }

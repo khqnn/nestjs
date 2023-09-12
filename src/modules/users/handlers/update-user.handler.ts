@@ -3,22 +3,17 @@ import { Repository } from "typeorm";
 import { User } from "../user.entity";
 
 
-export class GetUserByIdHandler extends BaseHandler {
+export class UpdateUserHandler extends BaseHandler {
     async handle(payload: any): Promise<{ success: boolean; statusCode: number; data: object; message: string; error?: any; }> {
 
         const user_id = payload.user_id
+        const user: User = payload.user
         const userRepository: Repository<User> = payload.repository
 
-        let user = undefined
         try {
-            const results = await userRepository.findOneBy({id: user_id})
-            if(!results){
-                return {success: false, statusCode: 404, data: {}, message: 'User not found'}
-            }
-
-            user = results
+            await userRepository.update({id: user_id}, user)
         } catch (error) {
-            return {success: false, statusCode: 400, data: {}, message: 'An error occured', error: error}
+            return {success: false, statusCode: 400, data: {}, message: 'could not update user', error: error}
             
         }
 

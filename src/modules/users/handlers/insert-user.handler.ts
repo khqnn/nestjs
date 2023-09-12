@@ -21,6 +21,8 @@ export class InsertUserHandler extends BaseHandler {
       };
     }
 
+    payload.user = createUser
+
     const nextHandlerResponse = await this.callNextHandler(payload);
     nextHandlerResponse.statusCode = 201
     return nextHandlerResponse;

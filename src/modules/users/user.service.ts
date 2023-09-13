@@ -18,8 +18,9 @@ import { GetUserByEmailHandler } from './handlers/get-user-by-email.handler';
 import { SetTemporaryPasswordHandler } from './handlers/set-temp-pass.handler';
 import { GenerateVerificationTokenHandler } from './handlers/generate-verification-token.handler';
 import { InjectUserRepositoryHandler } from './handlers/inject-user-repository.handler';
-import { PasswordUpdateCheckHandler } from './handlers/password-update-check.handler';
+import { PasswordUpdateCheckHandler } from './handlers/check-update-password.handler';
 import { SetUserUpdateParams } from './handlers/set-user-update-params.handler';
+import { CheckLoginPasswordHandler } from './handlers/check-login-password.handler';
 
 @Injectable()
 export class UserService {
@@ -84,7 +85,11 @@ export class UserService {
     return `This method will get user information details...`;
   }
 
-  userLogin(params: UserLoginDto) {
-    return `This method will authenticate user...`;
+  async userLogin(userLogin: UserLoginDto) {
+    return await createChain([
+      new InjectUserRepositoryHandler(this.userRepository),
+      new GetUserByEmailHandler(),
+      new CheckLoginPasswordHandler(),
+    ]).handle({ user_email: userLogin.email, userLogin });
   }
 }

@@ -189,8 +189,13 @@ export class UserController {
    */
   @Post('/login')
   @UsePipes(new CustomValidationPipe(userLoginSchema))
-  login(@Body() params: UserLoginDto) {
-    return this.userService.userLogin(params);
+  async login(@Body() params: UserLoginDto) {
+    const results = await this.userService.userLogin(params);
+    if (!results.success) {
+      throw new HttpException(results, results.statusCode);
+    }
+
+    return results;
   }
 
   /**

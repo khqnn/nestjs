@@ -19,6 +19,7 @@ import { SetTemporaryPasswordHandler } from './handlers/set-temp-pass.handler';
 import { GenerateVerificationTokenHandler } from './handlers/generate-verification-token.handler';
 import { InjectUserRepositoryHandler } from './handlers/inject-user-repository.handler';
 import { PasswordUpdateCheckHandler } from './handlers/password-update-check.handler';
+import { SetUserUpdateParams } from './handlers/set-user-update-params.handler';
 
 @Injectable()
 export class UserService {
@@ -72,6 +73,10 @@ export class UserService {
   async userUpdate(user_id: number, updateUser: UpdateUserDto) {
     return await createChain([
       new InjectUserRepositoryHandler(this.userRepository),
+      new GetUserByIdHandler(),
+      new SetUserUpdateParams(),
+      new UpdateUserHandler(),
+      new ParseSafeUser(),
     ]).handle({ user_id, updateUser });
   }
 

@@ -122,12 +122,17 @@ export class UserController {
   @UseGuards(
     new PermissionsGuard(['user-password-change'], { path: 'id', sub: 'sub' }),
   )
-  updatePassword(
+  async updatePassword(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(updatePasswordSchema))
     params: UpdatePasswordDto,
   ) {
-    return this.userService.userUpdatePassword(id, params);
+    const results = await this.userService.userUpdatePassword(id, params);
+    if (!results.success) {
+      throw new HttpException(results, results.statusCode);
+    }
+
+    return results;
   }
 
   /**
@@ -145,11 +150,16 @@ export class UserController {
   @UseGuards(
     new PermissionsGuard(['user-change', '*'], { path: 'id', sub: 'sub' }),
   )
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(updateUserSchema)) params: UpdateUserDto,
   ) {
-    return this.userService.userUpdate(id, params);
+    const results = await this.userService.userUpdate(id, params);
+    if (!results.success) {
+      throw new HttpException(results, results.statusCode);
+    }
+
+    return results;
   }
 
   /**

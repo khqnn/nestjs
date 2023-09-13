@@ -18,13 +18,14 @@ import { GetUserByEmailHandler } from './handlers/get-user-by-email.handler';
 import { SetTemporaryPasswordHandler } from './handlers/set-temp-pass.handler';
 import { GenerateVerificationTokenHandler } from './handlers/generate-verification-token.handler';
 import { InjectUserRepositoryHandler } from './handlers/inject-user-repository.handler';
+import { PasswordUpdateCheckHandler } from './handlers/password-update-check.handler';
 
 @Injectable()
 export class UserService {
   constructor(
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async userCreate(createUser: CreateUserDto) {
     return await createChain([
@@ -58,12 +59,20 @@ export class UserService {
     ]).handle({ resetPassword, user_email: resetPassword.email });
   }
 
-  userUpdatePassword(id: number, params: UpdatePasswordDto) {
-    return `This method will change user password...`;
+  async userUpdatePassword(user_id: number, updatePassword: UpdatePasswordDto) {
+    return await createChain([
+      new InjectUserRepositoryHandler(this.userRepository),
+      new GetUserByIdHandler(),
+      new PasswordUpdateCheckHandler(),
+      new UpdateUserHandler(),
+      new ParseSafeUser(),
+    ]).handle({ user_id, updatePassword });
   }
 
-  userUpdate(id: number, params: UpdateUserDto) {
-    return `This method will update user info...`;
+  async userUpdate(user_id: number, updateUser: UpdateUserDto) {
+    return await createChain([
+      new InjectUserRepositoryHandler(this.userRepository),
+    ]).handle({ user_id, updateUser });
   }
 
   userGet(id: number) {

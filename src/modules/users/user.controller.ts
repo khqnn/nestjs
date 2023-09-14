@@ -33,6 +33,7 @@ import { TenantService } from 'src/modules/tenants/tenants.service';
 import { CustomValidationPipe } from 'src/common/pipes/validation.pipe';
 import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { ApiKeyGuard } from 'src/common/guards/apikey.guard';
+import { USER_PERMISSIONS } from 'src/common/constants/permissions.constants';
 
 @Controller('users')
 export class UserController {
@@ -120,7 +121,7 @@ export class UserController {
    */
   @Put('/:id/password')
   @UseGuards(
-    new PermissionsGuard(['user-password-change'], { path: 'id', sub: 'sub' }),
+    new PermissionsGuard([USER_PERMISSIONS.USER_PASSWORD_CHANGE], { path: 'id', sub: 'sub' }),
   )
   async updatePassword(
     @Param('id', ParseIntPipe) id: number,
@@ -148,7 +149,7 @@ export class UserController {
    */
   @Put('/:id')
   @UseGuards(
-    new PermissionsGuard(['user-change', '*'], { path: 'id', sub: 'sub' }),
+    new PermissionsGuard([USER_PERMISSIONS.USER_CHANGE, '*'], { path: 'id', sub: 'sub' }),
   )
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -171,7 +172,7 @@ export class UserController {
    * - send 200 with data
    */
   @Get('/:id')
-  @UseGuards(new PermissionsGuard(null, { sub: 'sub', path: 'id' }))
+  @UseGuards(new PermissionsGuard([USER_PERMISSIONS.USER_READ], { sub: 'sub', path: 'id' }))
   get(@Param('id', ParseIntPipe) id: number) {
     return this.userService.userGet(id);
   }

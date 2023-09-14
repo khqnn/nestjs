@@ -21,6 +21,8 @@ import { InjectUserRepositoryHandler } from './handlers/inject-user-repository.h
 import { PasswordUpdateCheckHandler } from './handlers/check-update-password.handler';
 import { SetUserUpdateParams } from './handlers/set-user-update-params.handler';
 import { CheckLoginPasswordHandler } from './handlers/check-login-password.handler';
+import { ParseSafeLoginHandler } from './handlers/parse-safe-login.handler';
+import { GenerateUserTokenHandler } from './handlers/generate-user-token.handler';
 
 @Injectable()
 export class UserService {
@@ -88,8 +90,10 @@ export class UserService {
   async userLogin(userLogin: UserLoginDto) {
     return await createChain([
       new InjectUserRepositoryHandler(this.userRepository),
+      new ParseSafeLoginHandler(),
       new GetUserByEmailHandler(),
       new CheckLoginPasswordHandler(),
+      new GenerateUserTokenHandler(),
     ]).handle({ user_email: userLogin.email, userLogin });
   }
 }

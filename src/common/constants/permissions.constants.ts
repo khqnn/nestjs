@@ -6,4 +6,4 @@ export const USER_PERMISSIONS = Object.freeze({
     USER_PASSWORD_CHANGE: "user-password-change",
 })
 
-export const USER_PERMISSIONS_LIST = Object.keys(USER_PERMISSIONS)
+export const USER_PERMISSIONS_LIST = Object.values(USER_PERMISSIONS)

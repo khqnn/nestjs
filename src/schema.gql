@@ -1,0 +1,18 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  email: String!
+  name: String!
+  photo: String
+  secrete: String
+  password_temp: String
+  password_hash: String
+  enabled: Boolean
+  verified: Boolean
+}
+
+type Query {
+  getUser: User!
+}

@@ -83,8 +83,12 @@ export class UserService {
     ]).handle({ user_id, updateUser });
   }
 
-  userGet(id: number) {
-    return `This method will get user information details...`;
+  async userGet(user_id: number) {
+    return await createChain([
+      new InjectUserRepositoryHandler(this.userRepository),
+      new GetUserByIdHandler(),
+      new ParseSafeUser(),
+    ]).handle({ user_id });
   }
 
   async userLogin(userLogin: UserLoginDto) {

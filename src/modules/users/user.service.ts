@@ -23,6 +23,7 @@ import { SetUserUpdateParams } from './handlers/set-user-update-params.handler';
 import { CheckLoginPasswordHandler } from './handlers/check-login-password.handler';
 import { ParseSafeLoginHandler } from './handlers/parse-safe-login.handler';
 import { GenerateUserTokenHandler } from './handlers/generate-user-token.handler';
+import { GetUsersHandler } from './handlers/get-users.handler';
 
 @Injectable()
 export class UserService {
@@ -30,6 +31,14 @@ export class UserService {
     @Inject('USER_REPOSITORY')
     private userRepository: Repository<User>,
   ) { }
+
+
+  async indexUsers() {
+    return await createChain([
+      new InjectUserRepositoryHandler(this.userRepository),
+      new GetUsersHandler(),
+    ]).handle({  });
+  }
 
   async userCreate(createUser: CreateUserDto) {
     return await createChain([

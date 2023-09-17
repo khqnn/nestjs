@@ -6,9 +6,9 @@ import { UserService } from "./user.service";
 @Resolver(of=> User)
 export class UserResolver{
     constructor(private userService: UserService){}
-    @Query(returns => User)
-    async getUser(id: string){
-        const results = await this.userService.userGet(12)
-        return results.data['user']
+    @Query(returns => [User])
+    async getUsers(){
+        const results = await this.userService.indexUsers()
+        return results.data['users']
     }
 }

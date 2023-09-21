@@ -24,11 +24,12 @@ import { CheckLoginPasswordHandler } from './handlers/check-login-password.handl
 import { ParseSafeLoginHandler } from './handlers/parse-safe-login.handler';
 import { GenerateUserTokenHandler } from './handlers/generate-user-token.handler';
 import { GetUsersHandler } from './handlers/get-users.handler';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject('USER_REPOSITORY')
+    @InjectRepository(User)
     private userRepository: Repository<User>,
   ) { }
 

@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { PERMISSIONS_KEY } from './permissions.decorator';
 import { IDENTITY_KEY } from './identity.decorator';
 
 const extractTokenFromHeaders = (req: any) => {
@@ -21,20 +20,54 @@ const extractTokenFromHeaders = (req: any) => {
   return null;
 };
 
-@Injectable()
-export class PermissionsGuard implements CanActivate {
-  constructor(private reflector: Reflector, private jwtService: JwtService) { }
 
+const authorizeSubject = (
+  options?: { path?: string; query?: string; id?: string },
+  claims?: any,
+  request?: any,
+) => {
+  let sub = undefined;
+  let claimSub = undefined;
+
+  /**
+   * Fetch subject from path params
+   */
+  if (options && options.path) {
+    sub = request.params[options.path];
+  }
+
+  /**
+   * Fetch subject from query params
+   */
+  if (options && options.query) {
+    sub = request.query[options.query];
+  }
+
+  /**
+   * Fetch subject from claims
+   */
+  if (options.id) {
+    claimSub = claims[options.id];
+  }
+
+  console.log(sub, claimSub);
+  
+  /**
+   * Authorize sub
+   */
+  if (sub && sub != claimSub) {
+    throw new UnauthorizedException('Unauthorized!');
+  }
+};
+
+@Injectable()
+export class IdentityGuard implements CanActivate{
+  constructor(private reflector: Reflector, private jwtService: JwtService) { }
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredPermissions = this.reflector.getAllAndOverride<string[]>(PERMISSIONS_KEY, [
+    const options = this.reflector.getAllAndOverride<Object>(IDENTITY_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-
-    if (!requiredPermissions) {
-      return true;
-    }
-
 
     const request = context.switchToHttp().getRequest();
 
@@ -51,27 +84,17 @@ export class PermissionsGuard implements CanActivate {
         }
       );
 
-      /**
-       * Validate permissions from jwt claims
-       */
-      let permitted = false;
-      for (const permission of requiredPermissions) {
-        const found = claims.permissions.find((perm: string) => perm == permission);
-
-        if (found) {
-          permitted = true;
-          break;
-        }
-      }
-      if (!permitted) {
-        throw new UnauthorizedException('Not Authorized');
-      }
-
+      console.log(options, claims);
+      
+      authorizeSubject(options, claims, request)
 
     } catch {
       throw new UnauthorizedException();
     }
 
+
     return true;
   }
+
 }
+

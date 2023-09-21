@@ -32,12 +32,12 @@ export class TenantController {
    * [getTenant]
    */
   @Get('/:id')
-  @UseGuards(
-    new PermissionsGuard(['tenant-read', '*'], {
-      path: 'id',
-      sub: 'tenant_id',
-    }),
-  )
+  // @UseGuards(
+  //   new PermissionsGuard(['tenant-read', '*'], {
+  //     path: 'id',
+  //     sub: 'tenant_id',
+  //   }),
+  // )
   get(@Param('id', ParseIntPipe) id: number) {
     return this.tenantService.getTenant(id);
   }
@@ -48,12 +48,12 @@ export class TenantController {
    * [updateTenant]
    */
   @Put('/:id')
-  @UseGuards(
-    new PermissionsGuard(['tenant-change', '*'], {
-      path: 'id',
-      sub: 'tenant_id',
-    }),
-  )
+  // @UseGuards(
+  //   new PermissionsGuard(['tenant-change', '*'], {
+  //     path: 'id',
+  //     sub: 'tenant_id',
+  //   }),
+  // )
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(updateTenantSchema)) params: UpdateTenantDto,
@@ -67,7 +67,7 @@ export class TenantController {
    * [deleteTenant]
    */
   @Delete('/:id')
-  @UseGuards(new PermissionsGuard(null, { should_owner: true }))
+  // @UseGuards(new PermissionsGuard(null, { should_owner: true }))
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.tenantService.deleteTenant(id);
   }
@@ -78,12 +78,12 @@ export class TenantController {
    * [getTenantUsers]
    */
   @Get('/:id/users')
-  @UseGuards(
-    new PermissionsGuard(['tenant-user-read', '*'], {
-      path: 'id',
-      sub: 'tenant_id',
-    }),
-  )
+  // @UseGuards(
+  //   new PermissionsGuard(['tenant-user-read', '*'], {
+  //     path: 'id',
+  //     sub: 'tenant_id',
+  //   }),
+  // )
   getTenantUsers(@Param('id', ParseIntPipe) id: number) {
     return this.tenantService.getTenantUsers(id);
   }
@@ -94,12 +94,12 @@ export class TenantController {
    * [addTenantUser]
    */
   @Post('/:id/users')
-  @UseGuards(
-    new PermissionsGuard(['tenant-user0add', '*'], {
-      path: 'id',
-      sub: 'tenant_id',
-    }),
-  )
+  // @UseGuards(
+  //   new PermissionsGuard(['tenant-user0add', '*'], {
+  //     path: 'id',
+  //     sub: 'tenant_id',
+  //   }),
+  // )
   addTenantUser(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(createTenantUserSchema))
@@ -114,12 +114,12 @@ export class TenantController {
    * [updateTenantUser]
    */
   @Put('/:tenantId/users/:userId')
-  @UseGuards(
-    new PermissionsGuard(['tenant-user-change', '*'], {
-      path: 'tenantId',
-      sub: 'tenant_id',
-    }),
-  )
+  // @UseGuards(
+  //   new PermissionsGuard(['tenant-user-change', '*'], {
+  //     path: 'tenantId',
+  //     sub: 'tenant_id',
+  //   }),
+  // )
   updateTenantUser(
     @Param('tenantId', ParseIntPipe) tenantId: number,
     @Param('userId', ParseIntPipe) userId: number,
@@ -135,12 +135,12 @@ export class TenantController {
    * [removeTenantUser]
    */
   @Delete('/:tenantId/users/:userId')
-  @UseGuards(
-    new PermissionsGuard(['tenant-user-remove', '*'], {
-      path: 'tenantId',
-      sub: 'tenant_id',
-    }),
-  )
+  // @UseGuards(
+  //   new PermissionsGuard(['tenant-user-remove', '*'], {
+  //     path: 'tenantId',
+  //     sub: 'tenant_id',
+  //   }),
+  // )
   removeTenantUser(
     @Param('tenantId', ParseIntPipe) tenantId: number,
     @Param('userId', ParseIntPipe) userId: number,

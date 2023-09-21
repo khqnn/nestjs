@@ -5,9 +5,18 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { DatabaseModule } from './common/database/database.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { PermissionsGuard } from './common/guards/permissions.guard';
+import { IdentityGuard } from './common/guards/identity.guard';
 
 @Module({
   imports: [
+    JwtModule.register({
+      global: true,
+      secret: process.env.SECRETE_KEY,
+      signOptions: { expiresIn: '1h' },
+    }),
     DatabaseModule,
     UserModule,
     TenantModule,
@@ -17,6 +26,15 @@ import { DatabaseModule } from './common/database/database.module';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: IdentityGuard
+    },
+  ],
 })
 export class AppModule { }

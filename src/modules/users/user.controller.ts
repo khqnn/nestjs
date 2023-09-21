@@ -31,9 +31,10 @@ import {
 } from 'src/modules/tenants/dto/tenant-create.dto';
 import { TenantService } from 'src/modules/tenants/tenants.service';
 import { CustomValidationPipe } from 'src/common/pipes/validation.pipe';
-import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 import { ApiKeyGuard } from 'src/common/guards/apikey.guard';
 import { USER_PERMISSIONS } from 'src/common/constants/permissions.constants';
+import { Permissions } from 'src/common/guards/permissions.decorator';
+import { Identity } from 'src/common/guards/identity.decorator';
 
 @Controller('users')
 export class UserController {
@@ -74,7 +75,7 @@ export class UserController {
    */
   @Post('/:id/verify')
   @HttpCode(200)
-  @UseGuards(new PermissionsGuard(null, { path: 'id', sub: 'sub' }))
+  @Identity({id: 'sub', path: 'id'})
   async verify(@Param('id', ParseIntPipe) id: number) {
     const results = await this.userService.userVerify(id);
     if (!results.success) {
@@ -120,9 +121,8 @@ export class UserController {
    * - send 200
    */
   @Put('/:id/password')
-  @UseGuards(
-    new PermissionsGuard([USER_PERMISSIONS.USER_PASSWORD_CHANGE], { path: 'id', sub: 'sub' }),
-  )
+  @Identity({id: 'sub', path: 'id'})
+  @Permissions(USER_PERMISSIONS.USER_PASSWORD_CHANGE)
   async updatePassword(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(updatePasswordSchema))
@@ -148,9 +148,8 @@ export class UserController {
    * - send 200 with data
    */
   @Put('/:id')
-  @UseGuards(
-    new PermissionsGuard([USER_PERMISSIONS.USER_CHANGE, '*'], { path: 'id', sub: 'sub' }),
-  )
+  @Permissions(USER_PERMISSIONS.USER_CHANGE)
+  @Identity({id: 'sub', path: 'id'})
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(updateUserSchema)) params: UpdateUserDto,
@@ -172,7 +171,8 @@ export class UserController {
    * - send 200 with data
    */
   @Get('/:id')
-  @UseGuards(new PermissionsGuard([USER_PERMISSIONS.USER_READ], { sub: 'sub', path: 'id' }))
+  @Permissions(USER_PERMISSIONS.USER_READ)
+  @Identity({id: 'sub', path: 'id'})
   get(@Param('id', ParseIntPipe) id: number) {
     return this.userService.userGet(id);
   }
@@ -209,7 +209,8 @@ export class UserController {
    * - send 200 with data
    */
   @Get('/:id/tenants')
-  @UseGuards(new PermissionsGuard(['user-tenant-read'], { sub: 'id' }))
+  @Permissions('user-tenant-read')
+  @Identity({id: 'sub', path: 'id'})
   getTenants(@Param('id', ParseIntPipe) id: number) {
     return this.tenantService.getUserTenants(id);
   }
@@ -228,7 +229,8 @@ export class UserController {
    */
   @Post('/:id/tenants')
   @HttpCode(201)
-  @UseGuards(new PermissionsGuard(['tenant-add'], { sub: 'id' }))
+  @Permissions('tenant-add')
+  @Identity({id: 'sub', path: 'id'})
   createTenant(
     @Param('id', ParseIntPipe) id: number,
     @Body(new CustomValidationPipe(createTenantSchema)) params: CreateTenantDto,

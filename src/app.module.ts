@@ -12,6 +12,10 @@ import { IdentityGuard } from './common/guards/identity.guard';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
     JwtModule.register({
       global: true,
       secret: process.env.SECRETE_KEY,
@@ -20,10 +24,6 @@ import { IdentityGuard } from './common/guards/identity.guard';
     DatabaseModule,
     UserModule,
     TenantModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    }),
   ],
   controllers: [],
   providers: [
